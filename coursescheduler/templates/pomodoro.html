@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      #timer {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #333;
+        border: 2px solid #007bff;
+        border-radius: 10px;
+        padding: 15px 20px;
+        text-align: center;
+        background-color: #f8f9fa;
+        margin-bottom: 30px;
+      }
+
+      .btn-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      #startBtn {
+        font-size: 1rem; /* Butonun metin boyutu küçültüldü */
+        padding: 0.375rem 0.75rem; /* Buton padding ayarlandı */
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="currentColor"
+          class="bi bi-backpack3-fill"
+          viewBox="0 0 16 16"
+        >
+          <path d="M5 10v3h6v-3h-1v.5a.5.5 0 0 1-1 0V10z" />
+          <path
+            d="M6 2v.341a6 6 0 0 0-1.308.653l-.416-1.247a1 1 0 0 0-1.749-.284l-.77 1.027a1 1 0 0 0-.149.917l.803 2.407A6 6 0 0 0 2 8v5.5A2.5 2.5 0 0 0 4.5 16h7a2.5 2.5 0 0 0 2.5-2.5V8c0-.771-.146-1.509-.41-2.186l.801-2.407a1 1 0 0 0-.148-.917l-.77-1.027a1 1 0 0 0-1.75.284l-.415 1.247A6 6 0 0 0 10 2.34V2a2 2 0 1 0-4 0m1 0a1 1 0 0 1 2 0v.083a6 6 0 0 0-2 0zm5.941 2.595a6 6 0 0 0-.8-.937l.531-1.595.77 1.027zM3.86 3.658a6 6 0 0 0-.8.937L2.557 3.09l.77-1.027zm.18 3.772a4 4 0 0 1 7.92 0 .5.5 0 1 1-.99.142 3 3 0 0 0-5.94 0 .5.5 0 1 1-.99-.142M4 9.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z"
+          />
+        </svg>
+
+        Workflow
+      </a>
+    </nav>
+    <div class="container mt-5">
+      <!-- Report and Settings Buttons -->
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-toggle="modal"
+              data-target="#reportModal"
+            >
+              Report
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-toggle="modal"
+              data-target="#settingsModal"
+            >
+              Settings
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pomodoro Timer -->
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title text-center">Pomodoro</h5>
+              <div id="timer" class="text-center">30:00</div>
+              <button
+                id="startBtn"
+                type="button"
+                class="btn btn-success btn-block mt-3"
+              >
+                Start
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div
+      class="modal fade"
+      id="reportModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="reportModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reportModalLabel">Report</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Report Form -->
+            <form>
+              <div class="form-group">
+                <label for="reportType">Select Report Type:</label>
+                <select class="form-control" id="reportType">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Generate Report
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div
+      class="modal fade"
+      id="settingsModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="settingsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Settings Form -->
+            <form>
+              <div class="form-group">
+                <label for="pomodoroDuration"
+                  >Pomodoro Duration (minutes):</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="pomodoroDuration"
+                  value="30"
+                  min="1"
+                />
+              </div>
+              <button type="button" id="saveBtn" class="btn btn-primary btn-sm">
+                Save
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        var duration = 30; // Default duration is 30 minutes
+        var timerInterval;
+
+        function updateTimerDisplay(minutes, seconds) {
+          var displayMinutes = minutes < 10 ? "0" + minutes : minutes;
+          var displaySeconds = seconds < 10 ? "0" + seconds : seconds;
+          $("#timer").text(displayMinutes + ":" + displaySeconds);
+        }
+
+        $("#pomodoroDuration").on("input", function () {
+          duration = $(this).val();
+        });
+
+        $("#startBtn").click(function () {
+          $(this).prop("disabled", true);
+          startTimer();
+        });
+
+        function startTimer() {
+          var minutes = duration;
+          var seconds = 0;
+
+          timerInterval = setInterval(function () {
+            if (seconds == 0) {
+              if (minutes == 0) {
+                clearInterval(timerInterval);
+                $("#startBtn").prop("disabled", false);
+                return;
+              }
+              minutes--;
+              seconds = 59;
+            } else {
+              seconds--;
+            }
+
+            updateTimerDisplay(minutes, seconds);
+          }, 1000);
+        }
+
+        // Settings Modal Functionality
+        $("#saveBtn").click(function () {
+          var newDuration = $("#pomodoroDuration").val();
+          duration = newDuration;
+          updateTimerDisplay(duration, 0); // Update the timer display with the new duration
+          $("#settingsModal").modal("hide");
+        });
+      });
+    </script>
+  </body>
+</html>

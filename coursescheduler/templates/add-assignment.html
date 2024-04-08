@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Assignment</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="currentColor"
+          class="bi bi-backpack3-fill"
+          viewBox="0 0 16 16"
+        >
+          <path d="M5 10v3h6v-3h-1v.5a.5.5 0 0 1-1 0V10z" />
+          <path
+            d="M6 2v.341a6 6 0 0 0-1.308.653l-.416-1.247a1 1 0 0 0-1.749-.284l-.77 1.027a1 1 0 0 0-.149.917l.803 2.407A6 6 0 0 0 2 8v5.5A2.5 2.5 0 0 0 4.5 16h7a2.5 2.5 0 0 0 2.5-2.5V8c0-.771-.146-1.509-.41-2.186l.801-2.407a1 1 0 0 0-.148-.917l-.77-1.027a1 1 0 0 0-1.75.284l-.415 1.247A6 6 0 0 0 10 2.34V2a2 2 0 1 0-4 0m1 0a1 1 0 0 1 2 0v.083a6 6 0 0 0-2 0zm5.941 2.595a6 6 0 0 0-.8-.937l.531-1.595.77 1.027zM3.86 3.658a6 6 0 0 0-.8.937L2.557 3.09l.77-1.027zm.18 3.772a4 4 0 0 1 7.92 0 .5.5 0 1 1-.99.142 3 3 0 0 0-5.94 0 .5.5 0 1 1-.99-.142M4 9.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5z"
+          />
+        </svg>
+
+        Workflow
+      </a>
+    </nav>
+    <div class="container mt-5">
+      <h2 class="mb-4">Add Assignment</h2>
+      <form id="assignmentForm">
+        {% csrf_token %}
+        <div class="form-group row">
+          <label for="course" class="col-sm-2 col-form-label">Course</label>
+          <div class="col-sm-10">
+            <input
+              type="text"
+              class="form-control"
+              id="course"
+              name="assignment_course"
+              placeholder="Enter course"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="title" class="col-sm-2 col-form-label">Title</label>
+          <div class="col-sm-10">
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="assignment_title"
+              placeholder="Enter assignment title"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="deadline" class="col-sm-2 col-form-label">Deadline</label>
+          <div class="col-sm-10">
+            <input
+              type="date"
+              class="form-control"
+              id="deadline"
+              name="assignment_deadline"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12 text-center">
+            <button type="button" class="btn btn-primary" id="addAssignmentBtn">
+              Add Assignment
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="mt-5">
+        <h3>Assignments</h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Title</th>
+              <th>Deadline</th>
+              <th>Days Remaining</th>
+            </tr>
+          </thead>
+          <tbody id="assignmentTable">
+            {% for assignment in assignments %}
+            <tr id="assignment{{ assignment.id }}">
+              <td>{{ assignment.assignment_course }}</td>
+              <td>{{ assignment.assignment_title }}</td>
+              <td>{{ assignment.assignment_deadline }}</td>
+              <td>{{ assignment.remaining_days }}</td>
+              <td>
+                <button
+                  class="btn btn-danger delete-assignment"
+                  data-assignment-id="{{ assignment.id }}"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS ve jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#addAssignmentBtn").click(function () {
+          addAssignment();
+        });
+      });
+
+      function addAssignment() {
+        var course = $("#course").val();
+        var title = $("#title").val();
+        var deadline = $("#deadline").val();
+
+        $.ajax({
+          type: "POST",
+          url: "{% url 'add_assignment' %}",
+          data: {
+            assignment_course: course,
+            assignment_title: title,
+            assignment_deadline: deadline,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+          },
+          success: function (response) {
+            // Yeni satır oluştur
+            var newRow =
+              "<tr><td>" +
+              response.assignment_course +
+              "</td><td>" +
+              response.assignment_title +
+              "</td><td>" +
+              response.assignment_deadline +
+              "</td><td>[Calculate remaining days here]</td></tr>";
+            // Tabloya yeni satırı ekle
+            $("#assignmentTable").append(newRow);
+            // Formu temizle
+            $("#assignmentForm").trigger("reset");
+          },
+          error: function (xhr, errmsg, err) {
+            console.log("Error:", errmsg);
+          },
+        });
+      }
+      $(document).ready(function () {
+        $("#addAssignmentBtn").click(function () {
+          addAssignment();
+        });
+
+        // Sil düğmeleri için click event'i
+        $(document).on("click", ".delete-assignment", function () {
+          var assignmentId = $(this).data("assignment-id");
+          deleteAssignment(assignmentId);
+        });
+      });
+
+      // Görevi silme işlevi
+      function deleteAssignment(assignmentId) {
+        $.ajax({
+          type: "POST",
+          url: "{% url 'delete_assignment' %}",
+          data: {
+            assignment_id: assignmentId,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+          },
+          success: function (response) {
+            // Başarı durumunda tablodan görevi kaldır
+            $("#assignment" + assignmentId).remove();
+          },
+          error: function (xhr, errmsg, err) {
+            console.log("Error:", errmsg);
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
